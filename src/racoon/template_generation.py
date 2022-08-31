@@ -41,7 +41,7 @@ class Context:
         }
 
 
-def generate_template(template_url: str, context: Context):
+def generate_template(template_url: str, context: Context) -> None:
     cookiecutter(
         template=template_url,
         extra_context=context.dict(),
