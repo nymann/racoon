@@ -23,9 +23,9 @@ def package_name(safe_repo_name: str) -> str:
 class Context:
     def __init__(self, github: Github, repo_name: str, src_dir: str) -> None:
         self._user = github.get_user()
-        self._repo_name = sanitize_repo_name(repo_name)
-        self._project_name = project_name(safe_repo_name=self._repo_name)
-        self._package_name = package_name(safe_repo_name=self._repo_name)
+        self.repo_name = sanitize_repo_name(repo_name)
+        self._project_name = project_name(safe_repo_name=self.repo_name)
+        self._package_name = package_name(safe_repo_name=self.repo_name)
         self._src_dir = src_dir
 
     def dict(self) -> dict[str, str]:
@@ -36,7 +36,7 @@ class Context:
             "git_registry_account": self._user.login,
             "package_name": self._package_name,
             "project_name": self._project_name,
-            "repo_name": self._repo_name,
+            "repo_name": self.repo_name,
             "src_dir": self._src_dir,
         }
 
