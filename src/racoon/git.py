@@ -4,18 +4,14 @@ import subprocess
 from github.Repository import Repository
 
 
+def _git(*command: str) -> None:
+    subprocess.run(["git", *command])
+
+
 def init_template(repository: Repository) -> None:
     os.chdir(repository.name)
-    subprocess.run(["git", "init"])
-    subprocess.run(["git", "add", "."])
-    subprocess.run(["git", "commit", "-m", ":tada: Initialize template nymann/python-template"])
-    subprocess.run(
-        [
-            "git",
-            "remote",
-            "add",
-            "origin",
-            repository.ssh_url,
-        ]
-    )
-    subprocess.run(["git", "push", "-u", "origin", "master"])
+    _git("init")
+    _git("add", ".")
+    _git("commit", "-m", ":tada: Initialize template from nymann/python-template")
+    _git("remote", "add", "origin", repository.ssh_url)
+    _git("push", "-u", "origin", "master")
