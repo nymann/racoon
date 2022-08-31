@@ -1,4 +1,4 @@
-DOCKER_REPO?=default/nymann/racoon
+DOCKER_REPO?=nymann/racoon
 DOCKER_TAG?=${DOCKER_REPO}:$(shell git describe --tag --always | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')
 
 package: ${VERSION} setup.py
