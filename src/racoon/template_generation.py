@@ -37,6 +37,7 @@ class Context:
             "package_name": self._package_name,
             "project_name": self._project_name,
             "repo_name": self.repo_name,
+            "docker_repo": f"{self._user.login}/{self.repo_name}",
             "src_dir": self._src_dir,
         }
 
