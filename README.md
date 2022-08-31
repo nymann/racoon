@@ -1,6 +1,12 @@
 # Racoon
 
-View on [PyPI](https://pypi.org/project/py-racoon)
+_View on [PyPI](https://pypi.org/project/py-racoon)_
+
+## What is it?
+
+A Python3 template initializer based on [nymann/python-template](https://github.com/nymann/python-template). That automatically sets up a GitHub project for you.
+
+Example of generated project: [nymann/racoon-example](https://github.com/nymann/racoon-example)
 
 ## Installation
 
