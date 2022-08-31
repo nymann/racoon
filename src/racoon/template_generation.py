@@ -1,37 +1,43 @@
-import string
+import re
 
 from cookiecutter.main import cookiecutter
 from github import Github
 
 
+def project_name(safe_repo_name: str) -> str:
+    return " ".join(word.capitalize() for word in safe_repo_name.split("-"))
+
+
+def sanitize_repo_name(unsafe_repo_name: str) -> str:
+    word = unsafe_repo_name.strip(" -")
+    word = re.sub(r"[\ \_]+", r"-", word)
+    word = re.sub(r"([A-Z]+)([A-Z][a-z])", r"\1-\2", word)
+    word = re.sub(r"([a-z\d])([A-Z])", r"\1-\2", word)
+    return word.lower()
+
+
+def package_name(safe_repo_name: str) -> str:
+    return safe_repo_name.replace("-", "_")
+
+
 class Context:
     def __init__(self, github: Github, repo_name: str, src_dir: str) -> None:
-        self._github = github
-        user = self._github.get_user()
-        self.git_registry = "https://github.com/"
-        repo_name = repo_name.lower()
-        for ch in repo_name:
-            if ch not in string.ascii_lowercase:
-                repo_name = repo_name.replace(ch, "-")
-
-        self.repo_name = repo_name
-        self.project_slug = repo_name.replace("-", "_")
-        self.project_name = " ".join(word.capitalize() for word in repo_name.split("-"))
-        self.author_email = user.email
-        self.author_name = user.name
-        self.git_registry_account = user.login
-        self.src_dir = src_dir
+        self._user = github.get_user()
+        self._repo_name = sanitize_repo_name(repo_name)
+        self._project_name = project_name(safe_repo_name=self._repo_name)
+        self._package_name = package_name(safe_repo_name=self._repo_name)
+        self._src_dir = src_dir
 
     def dict(self) -> dict[str, str]:
         return {
-            "repo_name": self.repo_name,
-            "project_name": self.project_name,
-            "project_slug": self.project_slug,
-            "author_name": self.author_name,
-            "author_email": self.author_email,
-            "git_registry": self.git_registry,
-            "git_registry_account": self.git_registry_account,
-            "src_dir": self.src_dir,
+            "author_email": self._user.email,
+            "author_name": self._user.name,
+            "git_registry": "https://github.com/",
+            "git_registry_account": self._user.login,
+            "package_name": self._package_name,
+            "project_name": self._project_name,
+            "repo_name": self._repo_name,
+            "src_dir": self._src_dir,
         }
 
 
