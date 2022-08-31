@@ -19,18 +19,18 @@ test_cases = [
 @pytest.mark.parametrize("unsafe_repo_name", test_cases)
 def test_repo_name(unsafe_repo_name: str) -> None:
     actual = sanitize_repo_name(unsafe_repo_name=unsafe_repo_name)
-    assert "project-name" == actual
+    assert actual == "project-name"
 
 
 @pytest.mark.parametrize("unsafe_repo_name", test_cases)
 def test_project_name(unsafe_repo_name: str) -> None:
     sanitized = sanitize_repo_name(unsafe_repo_name=unsafe_repo_name)
     actual = project_name(safe_repo_name=sanitized)
-    assert "Project Name" == actual
+    assert actual == "Project Name"
 
 
 @pytest.mark.parametrize("unsafe_repo_name", test_cases)
 def test_package_name(unsafe_repo_name: str) -> None:
     sanitized = sanitize_repo_name(unsafe_repo_name=unsafe_repo_name)
     actual = package_name(safe_repo_name=sanitized)
-    assert "project_name" == actual
+    assert actual == "project_name"

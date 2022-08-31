@@ -10,8 +10,8 @@ def project_name(safe_repo_name: str) -> str:
 
 def sanitize_repo_name(unsafe_repo_name: str) -> str:
     word = unsafe_repo_name.strip(" -")
-    word = re.sub(r"[\ \_]+", r"-", word)
-    word = re.sub(r"([A-Z]+)([A-Z][a-z])", r"\1-\2", word)
+    word = re.sub(r"[\ \_]+", "-", word)
+    word = re.sub("([A-Z]+)([A-Z][a-z])", r"\1-\2", word)
     word = re.sub(r"([a-z\d])([A-Z])", r"\1-\2", word)
     return word.lower()
 
