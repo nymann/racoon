@@ -27,17 +27,18 @@ class Context:
         self._project_name = project_name(safe_repo_name=self.repo_name)
         self._package_name = package_name(safe_repo_name=self.repo_name)
         self._src_dir = src_dir
+        self._username = self._user.login
 
     def dict(self) -> dict[str, str]:
         return {
             "author_email": self._user.email,
             "author_name": self._user.name,
             "git_registry": "https://github.com/",
-            "git_registry_account": self._user.login,
+            "git_registry_account": self._username,
             "package_name": self._package_name,
             "project_name": self._project_name,
             "repo_name": self.repo_name,
-            "docker_repo": f"{self._user.login}/{self.repo_name}",
+            "docker_repo": f"{self._username}/{self.repo_name}",
             "src_dir": self._src_dir,
         }
 
