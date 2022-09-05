@@ -23,7 +23,7 @@ def package_name(safe_repo_name: str) -> str:
 class Context:
     def __init__(self, github: Github, repo_name: str, src_dir: str) -> None:
         self._user = github.get_user()
-        self.repo_name = sanitize_repo_name(repo_name)
+        self.repo_name = repo_name
         self._project_name = project_name(safe_repo_name=self.repo_name)
         self._package_name = package_name(safe_repo_name=self.repo_name)
         self._src_dir = src_dir
@@ -33,8 +33,7 @@ class Context:
         return {
             "author_email": self._user.email,
             "author_name": self._user.name,
-            "git_registry": "https://github.com/",
-            "git_registry_account": self._username,
+            "git_url": f"https://github.com/{self._username}/{self.repo_name}",
             "package_name": self._package_name,
             "project_name": self._project_name,
             "repo_name": self.repo_name,
