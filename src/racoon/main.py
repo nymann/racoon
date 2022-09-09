@@ -22,7 +22,7 @@ def generate(
 ) -> None:
     github = Github(login_or_token=github_access_token)
     repo_name = sanitize_repo_name(project_name)
-    context = Context(github=github, repo_name=project_name, src_dir=src_dir)
+    context = Context(github=github, repo_name=repo_name, src_dir=src_dir)
     generate_template(template_url=template_url, context=context)
     github_integration = GitHubIntegration(github=github)
     repo = github_integration.setup(repo_name=repo_name)
