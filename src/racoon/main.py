@@ -1,3 +1,5 @@
+from pathlib import Path
+
 from github import Github
 import typer
 
@@ -13,14 +15,19 @@ from racoon.template_generation import sanitize_repo_name
 app = typer.Typer()
 
 
+def read_file(path: Path) -> str:
+    with open(path, "r") as file_pointer:
+        return file_pointer.read().strip("\n")
+
+
 @app.command()
 def generate(
     project_name: str,
-    github_access_token: str = RequiredAccessToken,
+    github_access_token: Path = RequiredAccessToken,
     src_dir: str = DefaultSrcDir,
     template_url: str = DefaultTemplateURL,
 ) -> None:
-    github = Github(login_or_token=github_access_token)
+    github = Github(login_or_token=read_file(path=github_access_token))
     repo_name = sanitize_repo_name(project_name)
     context = Context(github=github, repo_name=repo_name, src_dir=src_dir)
     generate_template(template_url=template_url, context=context)

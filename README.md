@@ -24,7 +24,7 @@ Arguments:
   PROJECT_NAME  [required]
 
 Options:
-  --github-access-token TEXT      [env var: GITHUB_ACCESS_TOKEN; required]
+  --github-access-token PATH      [env var: GITHUB_ACCESS_TOKEN; default: ~/.cache/githube_token ]
   --src-dir TEXT                  [default: src]
   --template-url TEXT             [default: https://github.com/nymann/python-
                                   template.git]
@@ -33,7 +33,7 @@ Options:
 ### Example
 
 ```sh
-# Export your github access token as an environment variable, can also be provided via --github-access-token
+# Export your github access token file as an environment variable, can also be provided via --github-access-token
 export GITHUB_ACCESS_TOKEN='YOUR_ACCESS_TOKEN'
 
 # Create a new project "my-project" which will be created under https://github.com/YOUR_USERNAME/my-project
