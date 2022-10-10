@@ -18,16 +18,16 @@ pip install py-racoon
 
 ```sh
 $ racoon --help
-Usage: racoon [OPTIONS] PROJECT_NAME
+Usage: racoon [OPTIONS] URL
 
 Arguments:
-  PROJECT_NAME  [required]
+  URL  [required]
 
 Options:
-  --github-access-token PATH      [env var: GITHUB_ACCESS_TOKEN; default: ~/.cache/githube_token ]
+  --access-token PATH             [env var: GITHUB_ACCESS_TOKEN; default: /home/knj/.cache/github_token]
   --src-dir TEXT                  [default: src]
-  --template-url TEXT             [default: https://github.com/nymann/python-
-                                  template.git]
+  --template-url TEXT             [default: https://github.com/nymann/python-template.git]
+  --help                          Show this message and exit.
 ```
 
 ### Example

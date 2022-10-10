@@ -1,7 +1,9 @@
 from pathlib import Path
+import sys
 
 from github import Github
 from github.Repository import Repository
+from github import UnknownObjectException
 import typer
 
 from racoon.argument_types import DefaultSrcDir
@@ -31,6 +33,14 @@ def get_repo_by_url(url: str, github: Github) -> Repository:
     return github.get_repo(full_name_or_id=full_name)
 
 
+def get_or_create_repo(url: str, github: Github) -> Repository:
+    try:
+        return get_repo_by_url(url=url, github=github)
+    except UnknownObjectException:
+        typer.echo(f"The repository '{url}' does not exists. Go create it first")
+        sys.exit(1)
+
+
 @app.command()
 def generate(
     url: str,
@@ -39,7 +49,7 @@ def generate(
     template_url: str = DefaultTemplateURL,
 ) -> None:
     github = Github(login_or_token=read_file(path=access_token))
-    repo: Repository = get_repo_by_url(github=github, url=url)
+    repo: Repository = get_or_create_repo(github=github, url=url)
     user = github.get_user()
     context = Context(
         name=user.name,
