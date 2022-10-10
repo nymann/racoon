@@ -6,8 +6,7 @@ class GitHubIntegration:
     def __init__(self, github: Github) -> None:
         self._user = github.get_user()
 
-    def setup(self, repo_name: str) -> Repository:
-        repo = self._user.create_repo(name=repo_name)
+    def setup(self, repo: Repository) -> Repository:
         repo.create_secret("PYPI_API_TOKEN", "")
         repo.create_secret("DOCKER_TOKEN", "")
         repo.create_secret("DOCKER_USER", "")

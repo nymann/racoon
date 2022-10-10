@@ -1,19 +1,8 @@
-import re
-
 from cookiecutter.main import cookiecutter
-from github import Github
 
 
 def project_name(safe_repo_name: str) -> str:
     return " ".join(word.capitalize() for word in safe_repo_name.split("-"))
-
-
-def sanitize_repo_name(unsafe_repo_name: str) -> str:
-    word = unsafe_repo_name.strip(" -")
-    word = re.sub(r"[\ \_]+", "-", word)
-    word = re.sub("([A-Z]+)([A-Z][a-z])", r"\1-\2", word)
-    word = re.sub(r"([a-z\d])([A-Z])", r"\1-\2", word)
-    return word.lower()
 
 
 def package_name(safe_repo_name: str) -> str:
@@ -21,23 +10,32 @@ def package_name(safe_repo_name: str) -> str:
 
 
 class Context:
-    def __init__(self, github: Github, repo_name: str, src_dir: str) -> None:
-        self._user = github.get_user()
-        self.repo_name = repo_name
+    def __init__(  # noqa: WPS211 too-many-arguments
+        self,
+        name: str,
+        email: str,
+        url: str,
+        full_name: str,
+        src_dir: str,
+    ) -> None:
+        self._name = name
+        self._email = email
+        self._git_url = url
+        self._docker_repo = full_name
+        self.repo_name = full_name.split("/")[-1]
         self._project_name = project_name(safe_repo_name=self.repo_name)
         self._package_name = package_name(safe_repo_name=self.repo_name)
         self._src_dir = src_dir
-        self._username = self._user.login
 
     def dict(self) -> dict[str, str]:
         return {
-            "author_email": self._user.email,
-            "author_name": self._user.name,
-            "git_url": f"https://github.com/{self._username}/{self.repo_name}",
+            "author_email": self._email,
+            "author_name": self._name,
+            "git_url": self._git_url,
             "package_name": self._package_name,
             "project_name": self._project_name,
             "repo_name": self.repo_name,
-            "docker_repo": f"{self._username}/{self.repo_name}",
+            "docker_repo": self._docker_repo,
             "src_dir": self._src_dir,
         }
 
