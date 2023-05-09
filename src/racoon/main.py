@@ -1,5 +1,6 @@
 from pathlib import Path
 import sys
+import urllib.parse
 
 from github import Github
 from github.Repository import Repository
@@ -13,6 +14,22 @@ from racoon.git import init_template
 from racoon.github_integration import GitHubIntegration
 from racoon.template_generation import Context
 from racoon.template_generation import generate_template
+
+
+class Repo:
+    def __init__(self, group: str, name: str) -> None:
+        self.group: str = group
+        self.name: str = name
+
+    @classmethod
+    def from_url(cls, url: str) -> "Repo":
+        parsed_url = urllib.parse.urlparse(url)
+        path_components = parsed_url.path.rstrip("/").split("/")
+        return cls(group=path_components[-2], name=path_components[-1])
+
+    def to_url(self) -> str:
+        return f"https://github.com/{self.group}/{self.name}"
+
 
 app = typer.Typer()
 
@@ -33,12 +50,21 @@ def get_repo_by_url(url: str, github: Github) -> Repository:
     return github.get_repo(full_name_or_id=full_name)
 
 
+def create_repo(url: str, github: Github) -> Repository:
+    repo = Repo.from_url(url)
+    user = github.get_user()
+    if user.name == repo.group:
+        return user.create_repo(name=repo.name)
+    org = github.get_organization(repo.group)
+    return org.create_repo(name=repo.name)
+
+
 def get_or_create_repo(url: str, github: Github) -> Repository:
     try:
         return get_repo_by_url(url=url, github=github)
     except UnknownObjectException:
-        typer.echo(f"The repository '{url}' does not exists. Go create it first")
-        sys.exit(1)
+        typer.echo(f"The repository '{url}' does not exists. Creating it.")
+        return create_repo(url=url, github=github)
 
 
 @app.command()
