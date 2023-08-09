@@ -1,6 +1,4 @@
 from pathlib import Path
-import sys
-import urllib.parse
 
 from github import Github
 from github.Repository import Repository
@@ -12,24 +10,9 @@ from racoon.argument_types import DefaultTemplateURL
 from racoon.argument_types import RequiredAccessToken
 from racoon.git import init_template
 from racoon.github_integration import GitHubIntegration
+from racoon.repo import Repo
 from racoon.template_generation import Context
 from racoon.template_generation import generate_template
-
-
-class Repo:
-    def __init__(self, group: str, name: str) -> None:
-        self.group: str = group
-        self.name: str = name
-
-    @classmethod
-    def from_url(cls, url: str) -> "Repo":
-        parsed_url = urllib.parse.urlparse(url)
-        path_components = parsed_url.path.rstrip("/").split("/")
-        return cls(group=path_components[-2], name=path_components[-1])
-
-    def to_url(self) -> str:
-        return f"https://github.com/{self.group}/{self.name}"
-
 
 app = typer.Typer()
 
